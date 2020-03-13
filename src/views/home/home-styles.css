@@ -1,0 +1,31 @@
+.home-page{
+    padding: 1rem 0rem;    
+}
+
+.task-element{
+    display: flex;
+    align-items: center;    
+    border-bottom: solid 1px #000;
+    padding: 10px 0px;
+    margin-top: 15px;
+}
+
+.task-element .checkbox{
+    flex-basis: 5%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.task-element .task-description{
+    flex-grow: 2;
+    flex-basis: 95%;
+}
+
+.task-element .task-description p{
+    margin-bottom: 2px;
+}
+
+.home-page{
+    padding: 1rem 1rem;
+}

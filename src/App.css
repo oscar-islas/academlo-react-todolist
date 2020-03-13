@@ -1,3 +1,7 @@
+body{
+  background-color: #f1f1f1;
+}
+
 .App {
   text-align: center;
 }
@@ -37,16 +41,12 @@
   }
 }
 
-#root .container-fluid{
-  padding: 0px 0px;
-}
-
 /* Estilos Personalizados */
 .menu-desplegable{
-  background-color: #09646e;
+  background-color: #367880;
 }
 
-.menu-desplegable.navbar-light .navbar-nav .nav-link{
+.menu-desplegable.navbar-light .navbar-nav .nav-link, .menu-desplegable.navbar-light .navbar-nav .nav-link.active{
   color: #FFF;
 }
 
@@ -54,7 +54,37 @@
   color: #FFF;
 }
 
+.menu-desplegable.navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.menu-desplegable.navbar-light .navbar-toggler {
+  border-color: #FFF;
+} 
+
+#root>.container{
+  padding: 0px 0px;  
+}
+
+.menu-desplegable .navbar-collapse{
+  padding-top: 15px;
+}
+
+.view-container{
+  border-right: 2px solid #09646e;
+  background-color: #FFF;
+}
+
+#root{
+  overflow-x: hidden;
+}
+
 @media only screen and (min-width: 768px){
+  .menu-desplegable.navbar{
+    position: sticky;
+    top: 0px;
+  }
+
   .menu-desplegable.navbar{
     flex-direction: column;
     height: 100vh;
@@ -67,5 +97,13 @@
   .menu-desplegable.navbar .navbar-collapse{
     align-items: flex-start;
     width: 100%;
+  }
+
+  #root>.container{
+    padding: 0px 15px;    
+  }
+
+  #root{
+    overflow-x: inherit;
   }
 }

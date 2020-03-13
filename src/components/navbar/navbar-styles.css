@@ -1,0 +1,23 @@
+.menu-desplegable .navbar-nav{
+    margin: 0px;
+    width: 100%;
+    padding: 0px 15px;
+}
+
+.menu-desplegable .navbar-nav .nav-element.nav-link{
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #FFF;
+    padding: 10px 10px;
+}
+
+.menu-desplegable .nav-element svg{
+    margin-right: 10px;
+}
+
+@media only screen and (min-width: 768px){
+    .menu-desplegable.navbar{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
