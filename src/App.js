@@ -16,7 +16,9 @@ function App() {
           </Col>
           <Col md={9} className="view-container">
             <Switch>
-              <Route exact path='/' component={Home} />            
+              <Route exact path='/'>            
+                <Home />
+              </Route>
               <Route >
                 <NotFound />
               </Route>
