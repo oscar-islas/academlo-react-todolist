@@ -43,13 +43,15 @@ class App extends React.Component{
   }
 
   editTask(id){
+    //Obtener el objeto que coincida con el id de la tarea que deseamos modificar
     let taskObj = this.state.tasks.find( task => task.id === id);
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
+    //Cambiar el estado de ese item
     taskObj.disabled = !taskObj.disabled;
-
+    //Crear una copia del arreglo
     let taskArray = this.state.tasks;
     taskArray[taskIndex] = taskObj;
-
+    //Guardar el nuevo estado
     this.setState({tasks: taskArray});    
   }
 
