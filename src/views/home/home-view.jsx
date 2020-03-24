@@ -1,112 +1,25 @@
 import React from 'react';
 import './home-styles.css';
+import ListItem from '../../components/list-item/list-item-component';
 
-export default function Home(){
+export default function Home(props){
     return(
         <div className="home-page">
-            <h2>
-                Todas las tareas
-            </h2>
-
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
-            <div className="task-element">
-                <div className="checkbox">
-                    <label>
-                        <input type="checkbox" name="optradio2" value="" />
-                    </label>                    
-                </div>
-                <div className="task-description">
-                    <p>Hacer la planeación para la clase de hoy</p>
-                    <p>Fecha</p>
-                </div>
-            </div>
+            <h2>{props.titulo}</h2>
+            {
+                props.tareas.map( task => {
+                    return(
+                        <ListItem 
+                            id={task.id}
+                            content={task.content}
+                            date={task.date}
+                            disable={task.disabled}
+                            editFn={props.editFn}
+                            editTextFn={props.editTextFn}
+                        />
+                    )
+                })
+            }
         </div>
     )
 }

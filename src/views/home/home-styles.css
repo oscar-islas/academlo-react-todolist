@@ -29,3 +29,28 @@
 .home-page{
     padding: 1rem 1rem;
 }
+
+.form-flebox{
+    display: flex;
+    align-items: center;
+}
+.checkbox-form{
+    flex-basis: 10%;
+}
+.input-text-form{
+    flex-basis: 55%;
+}
+.save-btn-form{
+    flex-basis: 15%;
+}
+.option-btn-form{
+    flex-basis: 10%;
+}
+.save-btn-form>button, .option-btn-form>button, #formBasicCheckbox{
+    display: block;
+    margin: 0 auto;
+}
+
+.form-flebox .checkbox-form .form-check{
+    padding-left: 0px;
+}
