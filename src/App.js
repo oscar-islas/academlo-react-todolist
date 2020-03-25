@@ -87,7 +87,8 @@ class App extends React.Component{
 
   /*
   2. Completar el método addTask para guardar un objeto de tipo task 
-  dentro del arreglo this.state.tasks
+  dentro del arreglo this.state.tasks y validar que no se agregue una tarea 
+  sin haber ingresado al menos un caracter
   Nota: Usar el método push para agregar ese objeto, 
         recuerda que debes asignar un id distinto a cada una de las nuevas tareas
         y usar el método setState para actualizar el estado        
