@@ -54,3 +54,14 @@
 .form-flebox .checkbox-form .form-check{
     padding-left: 0px;
 }
+
+.contenedor-agregar-tarea{
+    margin: 15px 0px;
+    padding: 10px 0px;
+    background-color: #f1f1f1;
+}
+
+.btn-label{
+    margin-left: 15px;
+    font-weight: bold;
+}

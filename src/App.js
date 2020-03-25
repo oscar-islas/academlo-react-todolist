@@ -35,12 +35,29 @@ class App extends React.Component{
           date: "23 de Marzo 2020",
           disabled: true
         }
-      ]
+      ],
+      addTask: false,
     }
     //Ligar los métodos al contexto actual
     this.editTask = this.editTask.bind(this);
     this.editText = this.editText.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.editTaskState = this.editTaskState.bind(this);
   }
+
+  editTaskState(){    
+    this.setState(state => ({ addTask: !state.addTask}));
+  }
+
+  //addTask = false
+  //this.setState({addTask: !this.state.addTask}) => tomaría 200 ms en actualizar el estado
+  //100ms 
+  //addTask = false
+  //150ms presionamos nuevamente el botón
+  //this.setState({addTask: this.state.addTask}) => tomaría ms en actualizar el estado
+  //200ms
+  //addTask = true 
+  //El resultado esperado de acuerdo a la interacción sería addTask = false
 
   editTask(id){
     //Obtener el objeto que coincida con el id de la tarea que deseamos modificar
@@ -66,6 +83,17 @@ class App extends React.Component{
     this.setState({tasks: taskArray});
   }
 
+  deleteTask(id){
+    //Obtener el indice del item que deseamos borrar
+    let taskIndex = this.state.tasks.findIndex( task => task.id === id);
+    //Crear una copía para poder manipular el arreglo
+    let taskArray = this.state.tasks;
+    //Borrar el elemento con el método splice
+    taskArray.splice(taskIndex, 1);
+    //Agregar el nuevo valor para el estado tasks
+    this.setState({tasks: taskArray});
+  }
+
   render(){
     return(
       <BrowserRouter>
@@ -78,10 +106,13 @@ class App extends React.Component{
               <Switch>
                 <Route exact path='/'>            
                   <Home 
-                    titulo="Todas" 
+                    titulo="Todas"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
                     tareas={this.state.tasks}
                     editFn={this.editTask}
                     editTextFn={this.editText}
+                    deleteFn={this.deleteTask}
                   />
                 </Route>
                 <Route >

@@ -19,14 +19,19 @@ export default function ListItem(props){
             </Form.Group>
             { /* Buttons */ }
             <Form.Group className="save-btn-form">
-                <Button variant="primary">Guardar</Button>               
+                {
+                    //Expresión ternaria
+                    props.disable ? <div></div> : <Button variant="primary">Guardar</Button>                    
+                }
             </Form.Group>
+            { /* Botón de editar */ }
             <Form.Group className="option-btn-form">
                 <Button variant="warning" onClick={() => props.editFn(props.id)}>
                     <FontAwesomeIcon icon={faPencilAlt} />
                 </Button>
             </Form.Group>
-            <Form.Group className="option-btn-form">
+            { /* Botón de borrar */}
+            <Form.Group className="option-btn-form" onClick={() => props.deleteFn(props.id)}>
                 <Button variant="danger">
                     <FontAwesomeIcon icon={faTrash} />
                 </Button>
