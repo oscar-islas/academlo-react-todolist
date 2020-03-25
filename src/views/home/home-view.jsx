@@ -12,6 +12,19 @@ export default function Home(props){
             { /* Agregar una nueva tarea */ }
 
             {
+                /* 
+                
+                4. Utilizar el método onChange para el input y pasarle 
+                el método que le corresponde
+                Nota: props.nombreAtributo
+                
+                5. Utilizar el método onClick para el botón y pasarle 
+                el método que le corresponde  
+                
+                */
+            }
+
+            {
                 props.addTaskState ? (
                     <Row className="contenedor-agregar-tarea">
                         { /* Botón regresar al estado original */ }

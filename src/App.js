@@ -37,6 +37,7 @@ class App extends React.Component{
         }
       ],
       addTask: false,
+      newTask: "",
     }
     //Ligar los métodos al contexto actual
     this.editTask = this.editTask.bind(this);
@@ -48,16 +49,6 @@ class App extends React.Component{
   editTaskState(){    
     this.setState(state => ({ addTask: !state.addTask}));
   }
-
-  //addTask = false
-  //this.setState({addTask: !this.state.addTask}) => tomaría 200 ms en actualizar el estado
-  //100ms 
-  //addTask = false
-  //150ms presionamos nuevamente el botón
-  //this.setState({addTask: this.state.addTask}) => tomaría ms en actualizar el estado
-  //200ms
-  //addTask = true 
-  //El resultado esperado de acuerdo a la interacción sería addTask = false
 
   editTask(id){
     //Obtener el objeto que coincida con el id de la tarea que deseamos modificar
@@ -83,6 +74,28 @@ class App extends React.Component{
     this.setState({tasks: taskArray});
   }
 
+  /* Completar los siguientes métodos:
+    1. Método newTaskText para modificar el estado de newTask cuando 
+    cambie el valor del input (campo) para agregar una nueva tarea.
+
+    Nota: Debes de acceder a la propiedad evento.target.value para obtener el valor
+    del input además deberás de usar el método setState para actualizar el estado.
+  */
+  newTaskText(evento){
+    
+  }
+
+  /*
+  2. Completar el método addTask para guardar un objeto de tipo task 
+  dentro del arreglo this.state.tasks
+  Nota: Usar el método push para agregar ese objeto, 
+        recuerda que debes asignar un id distinto a cada una de las nuevas tareas
+        y usar el método setState para actualizar el estado        
+  */
+  addTask(){
+
+  }
+
   deleteTask(id){
     //Obtener el indice del item que deseamos borrar
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
@@ -104,7 +117,10 @@ class App extends React.Component{
             </Col>
             <Col md={9} className="view-container">
               <Switch>
-                <Route exact path='/'>            
+                <Route exact path='/'>      
+                  {/*
+                    3. Pasar los métodos creados como atributos para la vista Home
+                  */}      
                   <Home 
                     titulo="Todas"
                     addTaskState={this.state.addTask}
