@@ -33,10 +33,10 @@ export default function Home(props){
                             </Button>                                                   
                         </Col>
                         <Col md={7}>
-                            <Form.Control type="text" />                            
+                            <Form.Control type="text" onChange={props.newTaskTextFn} value={props.newTaskText} />                            
                         </Col>
                         <Col md={4}>
-                            <Button onClick={() => console.log("Has guardado la tarea")}>
+                            <Button onClick={props.addTaskFn}>
                                 Guardar                        
                             </Button>
                         </Col>
@@ -44,11 +44,14 @@ export default function Home(props){
                 ) : (
                     <Row className="contenedor-agregar-tarea">
                         { /* Botón para agregar una tarea */ }
-                        <Col md={6}>
+                        <Col md={8}>
                             <Button onClick={props.editTaskState}>
                                 <FontAwesomeIcon icon={faPlus} />                        
                             </Button>
-                            <span className="btn-label">Agregar nueva tarea</span>
+                            <span className="btn-label">Agregar nueva tarea</span>                            
+                        </Col>
+                        <Col md={4}>
+                            <Form.Control type="text" placeholder="Busca tu tarea" onChange={props.searchTaskFn} />                            
                         </Col>
                     </Row>
                 )

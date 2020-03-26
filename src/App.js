@@ -36,6 +36,32 @@ class App extends React.Component{
           disabled: true
         }
       ],
+      backupTasks: [
+        {
+          id: 1,
+          content: "Realizar la planeación para la clase",
+          date: "23 de Marzo 2020",
+          disabled: true        
+        },
+        {
+          id: 2,
+          content: "Lavar mi ropa",
+          date: "23 de Marzo 2020",
+          disabled: true
+        },
+        {
+          id: 3,
+          content: "Ordenar mi cuarto",
+          date: "23 de Marzo 2020",
+          disabled: true
+        },
+        {
+          id: 4,
+          content: "Pintar mi cuarto",
+          date: "23 de Marzo 2020",
+          disabled: true
+        }
+      ],
       addTask: false,
       newTask: "",
     }
@@ -60,7 +86,7 @@ class App extends React.Component{
     let taskArray = this.state.tasks;
     taskArray[taskIndex] = taskObj;
     //Guardar el nuevo estado
-    this.setState({tasks: taskArray});    
+    this.setState({tasks: taskArray, backupTasks: taskArray});    
   }
 
   editText(id, event){
@@ -71,7 +97,7 @@ class App extends React.Component{
     let taskArray = this.state.tasks;
     taskArray[taskIndex] = taskObj;
 
-    this.setState({tasks: taskArray});
+    this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
   /* Completar los siguientes métodos:
@@ -81,8 +107,8 @@ class App extends React.Component{
     Nota: Debes de acceder a la propiedad evento.target.value para obtener el valor
     del input además deberás de usar el método setState para actualizar el estado.
   */
-  newTaskText(evento){
-    
+  newTaskText = (evento) => {
+    this.setState({newTask: evento.target.value});
   }
 
   /*
@@ -93,8 +119,30 @@ class App extends React.Component{
         recuerda que debes asignar un id distinto a cada una de las nuevas tareas
         y usar el método setState para actualizar el estado        
   */
-  addTask(){
+  addTask = () => {    
+    if(this.state.newTask.length > 0){
+      //Creamos una copia de arreglo tasks
+      let taskArray = this.state.tasks;
+      //Obtener un nuevo ID
+      let newId = taskArray.length + 1;
+      //Agregar el nuevo objeto dentro del arreglo
+      taskArray.push({
+        id: newId,
+        content: this.state.newTask,
+        date: "23 de Marzo 2020",
+        disabled: true
+      });
+      //Utilizar un callback como segundo parametro para ejecutar una instrucción una vez que se haya actualizado el estado
+      this.setState({tasks: taskArray, backupTasks: taskArray}, () => {
+        this.setState({newTask: ""});
+      });
+    }    
+  }
 
+  searchTask = (evento) => {
+    let taskArray = this.state.backupTasks;
+    taskArray = taskArray.filter( task => task.content.includes(evento.target.value));
+    this.setState({tasks: taskArray});
   }
 
   deleteTask(id){
@@ -105,7 +153,7 @@ class App extends React.Component{
     //Borrar el elemento con el método splice
     taskArray.splice(taskIndex, 1);
     //Agregar el nuevo valor para el estado tasks
-    this.setState({tasks: taskArray});
+    this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
   render(){
@@ -127,8 +175,12 @@ class App extends React.Component{
                     addTaskState={this.state.addTask}
                     editTaskState={this.editTaskState}
                     tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
                     editFn={this.editTask}
                     editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
                     deleteFn={this.deleteTask}
                   />
                 </Route>
