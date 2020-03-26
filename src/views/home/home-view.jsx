@@ -13,7 +13,6 @@ export default function Home(props){
 
             {
                 /* 
-                
                 4. Utilizar el método onChange para el input y pasarle 
                 el método que le corresponde
                 Nota: props.nombreAtributo
