@@ -5,63 +5,14 @@ import NavbarComponent from './components/navbar/navbar-component';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NotFound from './views/404/404-view';
 import Home from './views/home/home-view';
+import {firestore} from './firebase/firebase-config-utils';
 
 class App extends React.Component{
   constructor(){
     super();
     this.state = {
-      tasks: [
-        {
-          id: 1,
-          content: "Realizar la planeación para la clase",
-          date: "23 de Marzo 2020",
-          disabled: true        
-        },
-        {
-          id: 2,
-          content: "Lavar mi ropa",
-          date: "23 de Marzo 2020",
-          disabled: true
-        },
-        {
-          id: 3,
-          content: "Ordenar mi cuarto",
-          date: "23 de Marzo 2020",
-          disabled: true
-        },
-        {
-          id: 4,
-          content: "Pintar mi cuarto",
-          date: "23 de Marzo 2020",
-          disabled: true
-        }
-      ],
-      backupTasks: [
-        {
-          id: 1,
-          content: "Realizar la planeación para la clase",
-          date: "23 de Marzo 2020",
-          disabled: true        
-        },
-        {
-          id: 2,
-          content: "Lavar mi ropa",
-          date: "23 de Marzo 2020",
-          disabled: true
-        },
-        {
-          id: 3,
-          content: "Ordenar mi cuarto",
-          date: "23 de Marzo 2020",
-          disabled: true
-        },
-        {
-          id: 4,
-          content: "Pintar mi cuarto",
-          date: "23 de Marzo 2020",
-          disabled: true
-        }
-      ],
+      tasks: [],
+      backupTasks: [],
       addTask: false,
       newTask: "",
     }
@@ -70,6 +21,26 @@ class App extends React.Component{
     this.editText = this.editText.bind(this);
     this.deleteTask = this.deleteTask.bind(this);
     this.editTaskState = this.editTaskState.bind(this);
+  }
+
+  componentDidMount(){
+    this.obtenerTareas((resultado) => {      
+      this.setState({tasks: resultado});
+    })
+  }
+
+  obtenerTareas(callback){
+    firestore.collection("tasks")
+      .onSnapshot(function(collection) {  
+        return new Promise( (resolve, reject) => {
+          let arrayTasks = [];     
+          collection.forEach( doc => {
+            //Colocar cada uno de los documentos que obtenga de la base de datos                
+            arrayTasks.push(doc.data());
+          });
+          callback(arrayTasks);
+        })           
+    });   
   }
 
   editTaskState(){    
@@ -100,42 +71,29 @@ class App extends React.Component{
     this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
-  /* Completar los siguientes métodos:
-    1. Método newTaskText para modificar el estado de newTask cuando 
-    cambie el valor del input (campo) para agregar una nueva tarea.
-
-    Nota: Debes de acceder a la propiedad evento.target.value para obtener el valor
-    del input además deberás de usar el método setState para actualizar el estado.
-  */
   newTaskText = (evento) => {
     this.setState({newTask: evento.target.value});
   }
 
-  /*
-  2. Completar el método addTask para guardar un objeto de tipo task 
-  dentro del arreglo this.state.tasks y validar que no se agregue una tarea 
-  sin haber ingresado al menos un caracter
-  Nota: Usar el método push para agregar ese objeto, 
-        recuerda que debes asignar un id distinto a cada una de las nuevas tareas
-        y usar el método setState para actualizar el estado        
-  */
-  addTask = () => {    
+  addTask = async () => {    
     if(this.state.newTask.length > 0){
-      //Creamos una copia de arreglo tasks
-      let taskArray = this.state.tasks;
-      //Obtener un nuevo ID
-      let newId = taskArray.length + 1;
-      //Agregar el nuevo objeto dentro del arreglo
-      taskArray.push({
-        id: newId,
-        content: this.state.newTask,
-        date: "23 de Marzo 2020",
-        disabled: true
+      //Agregar una tarea a la base de datos con el id del documento que se va agregar
+      try{
+        let refNewTask = await firestore.collection('tasks').doc(); 
+        let respuesta = await refNewTask.set({
+          id: refNewTask.id,
+          content: this.state.newTask,
+          date: "23 de Marzo 2020",
+          disabled: true
+        });
+      }catch(error){
+        console.log("No se ha podido agregar la tarea: ", error.message);
+      }
+
+      this.setState({newTask: ""}, () => {
+        this.setState();
       });
-      //Utilizar un callback como segundo parametro para ejecutar una instrucción una vez que se haya actualizado el estado
-      this.setState({tasks: taskArray, backupTasks: taskArray}, () => {
-        this.setState({newTask: ""});
-      });
+      
     }    
   }
 
@@ -152,8 +110,12 @@ class App extends React.Component{
     let taskArray = this.state.tasks;
     //Borrar el elemento con el método splice
     taskArray.splice(taskIndex, 1);
-    //Agregar el nuevo valor para el estado tasks
-    this.setState({tasks: taskArray, backupTasks: taskArray});
+    //Borrar la tarea en la base de datos
+    firestore.collection('tasks').doc(id).delete().then(function() {
+      console.log("Se ha borrado la tarea en la base de datos");
+    }).catch(function(error) {
+      console.error("Hubo un error al borrar la tarea: ", error.message);
+    });
   }
 
   render(){
