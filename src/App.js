@@ -31,15 +31,13 @@ class App extends React.Component{
 
   obtenerTareas(callback){
     firestore.collection("tasks")
-      .onSnapshot(function(collection) {  
-        return new Promise( (resolve, reject) => {
-          let arrayTasks = [];     
-          collection.forEach( doc => {
-            //Colocar cada uno de los documentos que obtenga de la base de datos                
-            arrayTasks.push(doc.data());
-          });
-          callback(arrayTasks);
-        })           
+      .onSnapshot(function(collection) {          
+        let arrayTasks = [];     
+        collection.forEach( doc => {
+          //Colocar cada uno de los documentos que obtenga de la base de datos                
+          arrayTasks.push(doc.data());
+        });
+        callback(arrayTasks);         
     });   
   }
 
