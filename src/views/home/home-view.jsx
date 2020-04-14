@@ -4,25 +4,16 @@ import {Row, Col, Button, Form} from 'react-bootstrap';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faPlus, faTimes} from '@fortawesome/free-solid-svg-icons';
 import ListItem from '../../components/list-item/list-item-component';
+import DatePicker, {registerLocale} from "react-datepicker";
+import es from 'date-fns/locale/es';
+import "react-datepicker/dist/react-datepicker.css";
+registerLocale('es', es)
+
 
 export default function Home(props){
     return(
         <div className="home-page">
             <h2>{props.titulo}</h2>
-            { /* Agregar una nueva tarea */ }
-
-            {
-                /* 
-                4. Utilizar el método onChange para el input y pasarle 
-                el método que le corresponde
-                Nota: props.nombreAtributo
-                
-                5. Utilizar el método onClick para el botón y pasarle 
-                el método que le corresponde  
-                
-                */
-            }
-
             {
                 props.addTaskState ? (
                     <Row className="contenedor-agregar-tarea">
@@ -35,7 +26,18 @@ export default function Home(props){
                         <Col md={7}>
                             <Form.Control type="text" onChange={props.newTaskTextFn} value={props.newTaskText} />                            
                         </Col>
-                        <Col md={4}>
+                        {/* Datepicker */}
+                        <Col md={2}>
+                            <DatePicker
+                                selected={props.todayDate}   
+                                dateFormat="dd/MM/yyyy"
+                                showMonthDropdown
+                                showYearDropdown   
+                                locale="es"
+                                onChange={(date) => console.log(date) }                       
+                            />
+                        </Col>
+                        <Col md={2}>
                             <Button onClick={props.addTaskFn}>
                                 Guardar                        
                             </Button>
@@ -59,12 +61,14 @@ export default function Home(props){
             
             {
                 props.tareas.map( task => {
+                    let fechaTarea = new Date(task.date.seconds * 1000);
+                    fechaTarea = fechaTarea.toDateString();
                     return(
                         <ListItem 
                             key={task.id}
                             id={task.id}
                             content={task.content}
-                            date={task.date}
+                            date={fechaTarea}
                             disable={task.disabled}
                             editFn={props.editFn}
                             editTextFn={props.editTextFn}

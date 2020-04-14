@@ -15,6 +15,7 @@ class App extends React.Component{
       backupTasks: [],
       addTask: false,
       newTask: "",
+      today: new Date()
     }
     //Ligar los métodos al contexto actual
     this.editTask = this.editTask.bind(this);
@@ -26,7 +27,7 @@ class App extends React.Component{
   componentDidMount(){
     this.obtenerTareas((resultado) => {      
       this.setState({tasks: resultado});
-    })
+    });
   }
 
   obtenerTareas(callback){
@@ -126,10 +127,7 @@ class App extends React.Component{
             </Col>
             <Col md={9} className="view-container">
               <Switch>
-                <Route exact path='/'>      
-                  {/*
-                    3. Pasar los métodos creados como atributos para la vista Home
-                  */}      
+                <Route exact path='/'>           
                   <Home 
                     titulo="Todas"
                     addTaskState={this.state.addTask}
@@ -142,6 +140,7 @@ class App extends React.Component{
                     editTextFn={this.editText}
                     searchTaskFn={this.searchTask}
                     deleteFn={this.deleteTask}
+                    todayDate={this.state.today}
                   />
                 </Route>
                 <Route >
