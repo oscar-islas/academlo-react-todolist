@@ -29,12 +29,12 @@ export default function Home(props){
                         {/* Datepicker */}
                         <Col md={2}>
                             <DatePicker
-                                selected={props.todayDate}   
+                                selected={props.selectedDate}   
                                 dateFormat="dd/MM/yyyy"
                                 showMonthDropdown
                                 showYearDropdown   
                                 locale="es"
-                                onChange={(date) => console.log(date) }                       
+                                onChange={props.handleNewDate}                       
                             />
                         </Col>
                         <Col md={2}>
@@ -61,18 +61,21 @@ export default function Home(props){
             
             {
                 props.tareas.map( task => {
-                    let fechaTarea = new Date(task.date.seconds * 1000);
-                    fechaTarea = fechaTarea.toDateString();
+                    //Declarar una cadena de texto que representará la fecha de la tarea
+                    let dateString = task.date.toDateString();
+
                     return(
                         <ListItem 
                             key={task.id}
                             id={task.id}
                             content={task.content}
-                            date={fechaTarea}
+                            date={dateString}
+                            dateObj={task.date}
                             disable={task.disabled}
                             editFn={props.editFn}
                             editTextFn={props.editTextFn}
                             deleteFn={props.deleteFn}
+                            handleEditDate={props.handleEditDate}
                         />
                     )
                 })

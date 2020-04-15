@@ -10,23 +10,25 @@ import {firestore} from './firebase/firebase-config-utils';
 class App extends React.Component{
   constructor(){
     super();
+
     this.state = {
       tasks: [],
       backupTasks: [],
       addTask: false,
       newTask: "",
-      today: new Date()
+      selectedDate: new Date()
     }
-    //Ligar los métodos al contexto actual
-    this.editTask = this.editTask.bind(this);
-    this.editText = this.editText.bind(this);
-    this.deleteTask = this.deleteTask.bind(this);
-    this.editTaskState = this.editTaskState.bind(this);
   }
 
   componentDidMount(){
-    this.obtenerTareas((resultado) => {      
-      this.setState({tasks: resultado});
+    //Este método se va a ejecutar cuando se haya montado el componente (App)
+    this.obtenerTareas(resultado => {             
+      let taskArrayDate = resultado.map( tarea => {
+        //Convertir la fecha (timestamp unix) a GMT
+        tarea.date = new Date(tarea.date.seconds * 1000);
+        return tarea;
+      });
+      this.setState({tasks: taskArrayDate});
     });
   }
 
@@ -42,11 +44,11 @@ class App extends React.Component{
     });   
   }
 
-  editTaskState(){    
+  editTaskState = () => {    
     this.setState(state => ({ addTask: !state.addTask}));
   }
 
-  editTask(id){
+  editTask = id => {
     //Obtener el objeto que coincida con el id de la tarea que deseamos modificar
     let taskObj = this.state.tasks.find( task => task.id === id);
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
@@ -59,14 +61,12 @@ class App extends React.Component{
     this.setState({tasks: taskArray, backupTasks: taskArray});    
   }
 
-  editText(id, event){
+  editText = (id, event) => {
     let taskObj = this.state.tasks.find( task => task.id === id);
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
     taskObj.content = event.target.value;
-
     let taskArray = this.state.tasks;
     taskArray[taskIndex] = taskObj;
-
     this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
@@ -82,17 +82,15 @@ class App extends React.Component{
         let respuesta = await refNewTask.set({
           id: refNewTask.id,
           content: this.state.newTask,
-          date: "23 de Marzo 2020",
-          disabled: true
+          date: this.state.selectedDate,
+          disabled: true,
+          completed: false
         });
+        console.log(respuesta);
       }catch(error){
         console.log("No se ha podido agregar la tarea: ", error.message);
       }
-
-      this.setState({newTask: ""}, () => {
-        this.setState();
-      });
-      
+      this.setState({newTask: ""});      
     }    
   }
 
@@ -102,7 +100,7 @@ class App extends React.Component{
     this.setState({tasks: taskArray});
   }
 
-  deleteTask(id){
+  deleteTask = id => {
     //Obtener el indice del item que deseamos borrar
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
     //Crear una copía para poder manipular el arreglo
@@ -115,6 +113,26 @@ class App extends React.Component{
     }).catch(function(error) {
       console.error("Hubo un error al borrar la tarea: ", error.message);
     });
+  }
+
+  handleNewDate = (date) => {
+    //Actualizaré la fecha del estado conforme la fecha seleccionada en el componente datepicker
+    this.setState({selectedDate: date});
+  }
+
+  handleEditDate = (date, id) => {    
+    console.log(id);
+    //Buscar el id dentro del arreglo tareas para poder modificar la fecha
+    let taskObj = this.state.tasks.find( task => task.id === id);
+    //Buscar el indice donde se encuentra el elemento que coincida con el id
+    let taskIndex = this.state.tasks.findIndex( task => task.id === id);
+    //Modificar la fecha con la fecha que recibimos
+    taskObj.date = date;
+    //Usamos un arreglo temporal para poder modificar el objeto en el indice que obtuvimos previamente
+    let taskArray = this.state.tasks;
+    taskArray[taskIndex] = taskObj;
+
+    this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
   render(){
@@ -140,7 +158,9 @@ class App extends React.Component{
                     editTextFn={this.editText}
                     searchTaskFn={this.searchTask}
                     deleteFn={this.deleteTask}
-                    todayDate={this.state.today}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
                   />
                 </Route>
                 <Route >

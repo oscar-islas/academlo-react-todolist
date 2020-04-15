@@ -2,13 +2,17 @@ import React from 'react';
 import {Form, Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
+import DatePicker, {registerLocale} from "react-datepicker";
+import es from 'date-fns/locale/es';
+import "react-datepicker/dist/react-datepicker.css";
+registerLocale('es', es)
 
 export default function ListItem(props){
     return (
         <Form className="form-flebox">
             { /* Checkbox */ }
             <Form.Group controlId="formBasicCheckbox" className="checkbox-form">
-                <Form.Check type="checkbox" />
+                <Form.Check type="checkbox" onChange={(event) => console.log(event.target.checked)} />
             </Form.Group>
             { /* Input type text */ }
             <Form.Group className="input-text-form">    
@@ -16,6 +20,16 @@ export default function ListItem(props){
                 <Form.Text className="text-muted">
                     {props.date}
                 </Form.Text>
+            </Form.Group>
+            <Form.Group className="input-text-form">
+                <DatePicker
+                    selected={props.dateObj}   
+                    dateFormat="dd/MM/yyyy"
+                    showMonthDropdown
+                    showYearDropdown   
+                    locale="es"  
+                    onChange={(date) => props.handleEditDate(date, props.id)}   
+                />                
             </Form.Group>
             { /* Buttons */ }
             <Form.Group className="save-btn-form">
