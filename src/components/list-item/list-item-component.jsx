@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Button} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
 import DatePicker, {registerLocale} from "react-datepicker";
 import es from 'date-fns/locale/es';
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,10 +9,10 @@ registerLocale('es', es)
 
 export default function ListItem(props){
     return (
-        <Form className="form-flebox">
+        <Form className={`form-flebox ${props.completed ? 'task-completed' : '' }`}>
             { /* Checkbox */ }
             <Form.Group controlId="formBasicCheckbox" className="checkbox-form">
-                <Form.Check type="checkbox" onChange={(event) => console.log(event.target.checked)} />
+                <Form.Check type="checkbox" onChange={(event) => props.completeTask(event, props.id)} checked={props.completed} />
             </Form.Group>
             { /* Input type text */ }
             <Form.Group className="input-text-form">    
@@ -21,13 +21,14 @@ export default function ListItem(props){
                     {props.date}
                 </Form.Text>
             </Form.Group>
-            <Form.Group className="input-text-form">
+            <Form.Group className="input-datepicker-form">
                 <DatePicker
                     selected={props.dateObj}   
                     dateFormat="dd/MM/yyyy"
                     showMonthDropdown
                     showYearDropdown   
                     locale="es"  
+                    disabled={props.disable}
                     onChange={(date) => props.handleEditDate(date, props.id)}   
                 />                
             </Form.Group>
@@ -35,7 +36,9 @@ export default function ListItem(props){
             <Form.Group className="save-btn-form">
                 {
                     //Expresión ternaria
-                    props.disable ? <div></div> : <Button variant="primary">Guardar</Button>                    
+                    props.disable ? <div></div> : <Button variant="primary" onClick={() => props.updateTask(props.id)}>
+                        <FontAwesomeIcon icon={faSave} />
+                    </Button>                    
                 }
             </Form.Group>
             { /* Botón de editar */ }

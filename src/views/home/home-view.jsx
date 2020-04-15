@@ -72,10 +72,13 @@ export default function Home(props){
                             date={dateString}
                             dateObj={task.date}
                             disable={task.disabled}
+                            completed={task.completed}
                             editFn={props.editFn}
                             editTextFn={props.editTextFn}
                             deleteFn={props.deleteFn}
                             handleEditDate={props.handleEditDate}
+                            updateTask={props.updateTask}
+                            completeTask={props.completeTask}
                         />
                     )
                 })

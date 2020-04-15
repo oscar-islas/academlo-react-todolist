@@ -5,6 +5,7 @@ import NavbarComponent from './components/navbar/navbar-component';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NotFound from './views/404/404-view';
 import Home from './views/home/home-view';
+import TodayView from './views/today/today-view';
 import {firestore} from './firebase/firebase-config-utils';
 
 class App extends React.Component{
@@ -34,20 +35,24 @@ class App extends React.Component{
 
   obtenerTareas(callback){
     firestore.collection("tasks")
-      .onSnapshot(function(collection) {          
-        let arrayTasks = [];     
+      .onSnapshot(function(collection) {   
+        //El método onSnapshot se ejecutará cada vez que haya un cambio en la coleccion tasks de firestore
+        let arrayTasks = []; //Aquí guardaremos los documentos 
         collection.forEach( doc => {
           //Colocar cada uno de los documentos que obtenga de la base de datos                
           arrayTasks.push(doc.data());
         });
+        //Llamaremos a una función de tipo callback después de la respuesta de la base de datos
         callback(arrayTasks);         
     });   
   }
 
+  //Método para actualizar el estado para agregar un item(tarea)
   editTaskState = () => {    
     this.setState(state => ({ addTask: !state.addTask}));
   }
 
+  //Método para habilitar o deshabilitar la edición de un item(tarea)
   editTask = id => {
     //Obtener el objeto que coincida con el id de la tarea que deseamos modificar
     let taskObj = this.state.tasks.find( task => task.id === id);
@@ -61,19 +66,26 @@ class App extends React.Component{
     this.setState({tasks: taskArray, backupTasks: taskArray});    
   }
 
+  //Método para editar el contenido del item(tarea)
   editText = (id, event) => {
+    //Buscar el objeto respecto al id que obtenemos en el método
     let taskObj = this.state.tasks.find( task => task.id === id);
+    //Buscar el indice donde se encuentra el elemento que queremos modificar
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
+    //Modificar el contenido de la tarea
     taskObj.content = event.target.value;
     let taskArray = this.state.tasks;
     taskArray[taskIndex] = taskObj;
+    //Actualizar el estado con el arreglo que fue modificado
     this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
+  //Método para poder modificar el valor del input para agregar una tarea
   newTaskText = (evento) => {
     this.setState({newTask: evento.target.value});
   }
 
+  //Método para agregar una tarea a firebase
   addTask = async () => {    
     if(this.state.newTask.length > 0){
       //Agregar una tarea a la base de datos con el id del documento que se va agregar
@@ -94,12 +106,14 @@ class App extends React.Component{
     }    
   }
 
+  //Método para buscar y filtrar las tareas
   searchTask = (evento) => {
     let taskArray = this.state.backupTasks;
     taskArray = taskArray.filter( task => task.content.includes(evento.target.value));
     this.setState({tasks: taskArray});
   }
 
+  //Método para borrar la tarea de la base de datos firestore
   deleteTask = id => {
     //Obtener el indice del item que deseamos borrar
     let taskIndex = this.state.tasks.findIndex( task => task.id === id);
@@ -135,6 +149,54 @@ class App extends React.Component{
     this.setState({tasks: taskArray, backupTasks: taskArray});
   }
 
+  updateTask = id => {
+    //Creamos la referencia hacía la base de datos
+    let taskRef = firestore.collection('tasks').doc(id);
+    //Obtener el objeto que coincida con el id que recibimos 
+    let taskObj = this.state.tasks.find( task => task.id === id);
+    //Actualizar el estado para volver a deshabilitar el input
+    taskObj.disabled = true;
+    //Usar una transacción para comprobar que el documento exista
+    //Si existe el documento entonces lo actualizaremos en la base de datos
+    firestore.runTransaction(function(transaction) {
+      // This code may get re-run multiple times if there are conflicts.
+      return transaction.get(taskRef).then(function(sfDoc) {
+          if (!sfDoc.exists) {
+            throw new Error("Document does not exist!");
+          }                  
+          transaction.update(taskRef, taskObj);
+      });
+    }).then(function() {
+        console.log("Transaction successfully committed!");
+    }).catch(function(error) {
+        console.log("Transaction failed: ", error);
+    });
+  }
+
+  completeTask = (event, id) => {
+    //Obtener el objeto que coincida con el id que recibimos como parametro
+    let taskObj = this.state.tasks.find( task => task.id === id);
+    taskObj.completed = event.target.checked;
+
+    //Crear la referencia hacía el documento que queremos actualizar
+    let taskRef = firestore.collection('tasks').doc(id);
+    //Usar una transacción para comprobar que el documento exista
+    //Si existe el documento entonces lo actualizaremos en la base de datos
+    firestore.runTransaction(function(transaction) {
+      // This code may get re-run multiple times if there are conflicts.
+      return transaction.get(taskRef).then(function(sfDoc) {
+          if (!sfDoc.exists) {
+            throw new Error("Document does not exist!");
+          }                  
+          transaction.update(taskRef, taskObj);
+      });
+    }).then(function() {
+        console.log("Transaction successfully committed!");
+    }).catch(function(error) {
+        console.log("Transaction failed: ", error);
+    });
+  }
+
   render(){
     return(
       <BrowserRouter>
@@ -148,6 +210,26 @@ class App extends React.Component{
                 <Route exact path='/'>           
                   <Home 
                     titulo="Todas"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
+                    tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
+                    editFn={this.editTask}
+                    editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
+                    deleteFn={this.deleteTask}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
+                    updateTask={this.updateTask}
+                    completeTask={this.completeTask}
+                  />
+                </Route>
+                <Route path='/hoy'>
+                  <TodayView 
+                    titulo="Tareas para hoy"
                     addTaskState={this.state.addTask}
                     editTaskState={this.editTaskState}
                     tareas={this.state.tasks}
