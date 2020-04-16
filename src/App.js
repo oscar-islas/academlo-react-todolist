@@ -5,6 +5,8 @@ import NavbarComponent from './components/navbar/navbar-component';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import NotFound from './views/404/404-view';
 import Home from './views/home/home-view';
+import CompletedView from './views/completed/completed-view';
+import NextWeekView from './views/nextweek/nextweek-view';
 import TodayView from './views/today/today-view';
 import {firestore} from './firebase/firebase-config-utils';
 
@@ -230,6 +232,42 @@ class App extends React.Component{
                 <Route path='/hoy'>
                   <TodayView 
                     titulo="Tareas para hoy"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
+                    tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
+                    editFn={this.editTask}
+                    editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
+                    deleteFn={this.deleteTask}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
+                  />
+                </Route>
+                <Route path='/completadas'>
+                  <CompletedView 
+                    titulo="Tareas Completas"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
+                    tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
+                    editFn={this.editTask}
+                    editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
+                    deleteFn={this.deleteTask}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
+                  />
+                </Route>
+                <Route path='/proxima-semana'>
+                  <NextWeekView 
+                    titulo="Tareas para la próxima semana"
                     addTaskState={this.state.addTask}
                     editTaskState={this.editTaskState}
                     tareas={this.state.tasks}
