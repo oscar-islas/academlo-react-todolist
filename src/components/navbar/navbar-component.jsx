@@ -17,8 +17,14 @@ export default function NavbarComponent(){
                 <Nav.Link className="nav-element" as={Link} to="/hoy">
                     <FontAwesomeIcon icon={faCalendarDay} />Hoy
                 </Nav.Link>
+                <Nav.Link className="nav-element" as={Link} to="/esta-semana">
+                    <FontAwesomeIcon icon={faCalendarWeek} />Esta Semana
+                </Nav.Link>                
                 <Nav.Link className="nav-element" as={Link} to="/proxima-semana">
                     <FontAwesomeIcon icon={faCalendarWeek} />Próxima Semana
+                </Nav.Link>
+                <Nav.Link className="nav-element" as={Link} to="/pasadas">
+                    <FontAwesomeIcon icon={faCalendarWeek} />Pasadas
                 </Nav.Link>
                 <Nav.Link className="nav-element" as={Link} to="/completadas">
                     <FontAwesomeIcon icon={faCalendarCheck} /> Completadas

@@ -6,7 +6,10 @@ import NotFound from './views/404/404-view';
 import Home from './views/home/home-view';
 import CompletedView from './views/completed/completed-view';
 import NextWeekView from './views/nextweek/nextweek-view';
+import Week from './views/week/week-view';
+import OutDate from './views/outdate/out-date-view';
 import TodayView from './views/today/today-view';
+import NavbarComponent from './components/navbar/navbar-component';
 import {firestore} from './firebase/firebase-config-utils';
 
 class App extends React.Component{
@@ -30,7 +33,7 @@ class App extends React.Component{
         tarea.date = new Date(tarea.date.seconds * 1000);
         return tarea;
       });
-      this.setState({tasks: taskArrayDate});
+      this.setState({tasks: taskArrayDate, backupTasks: taskArrayDate});
     });
   }
 
@@ -109,7 +112,7 @@ class App extends React.Component{
 
   //Método para buscar y filtrar las tareas
   searchTask = (evento) => {
-    let taskArray = this.state.backupTasks;
+    let taskArray = [...this.state.backupTasks];
     taskArray = taskArray.filter( task => task.content.includes(evento.target.value));
     this.setState({tasks: taskArray});
   }
@@ -203,7 +206,10 @@ class App extends React.Component{
       <BrowserRouter>
         <Container>
           <Row>
-            <Col md={12} className="view-container">
+            <Col md={3}>
+              <NavbarComponent />
+            </Col>
+            <Col md={9} className="view-container">
               <Switch>
                 <Route exact path='/'>           
                   <Home 
@@ -264,6 +270,42 @@ class App extends React.Component{
                 <Route path='/proxima-semana'>
                   <NextWeekView 
                     titulo="Tareas para la próxima semana"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
+                    tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
+                    editFn={this.editTask}
+                    editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
+                    deleteFn={this.deleteTask}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
+                  />
+                </Route>
+                <Route path='/esta-semana'>
+                  <Week 
+                    titulo="Tareas para esta semana"
+                    addTaskState={this.state.addTask}
+                    editTaskState={this.editTaskState}
+                    tareas={this.state.tasks}
+                    addTaskFn={this.addTask}
+                    newTaskTextFn={this.newTaskText}
+                    newTaskText={this.state.newTask}
+                    editFn={this.editTask}
+                    editTextFn={this.editText}
+                    searchTaskFn={this.searchTask}
+                    deleteFn={this.deleteTask}
+                    handleNewDate={this.handleNewDate}
+                    selectedDate={this.state.selectedDate}
+                    handleEditDate={this.handleEditDate}
+                  />
+                </Route>
+                <Route path='/pasadas'>
+                  <OutDate 
+                    titulo="Tareas pasadas"
                     addTaskState={this.state.addTask}
                     editTaskState={this.editTaskState}
                     tareas={this.state.tasks}
