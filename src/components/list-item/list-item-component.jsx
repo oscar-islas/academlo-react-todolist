@@ -8,6 +8,8 @@ import "react-datepicker/dist/react-datepicker.css";
 registerLocale('es', es)
 
 export default function ListItem(props){
+    let dateString = new Date(props.date);
+    dateString = `${dateString.getDate()}/${dateString.getMonth()+1}/${dateString.getFullYear()}`;
     return (
         <Form className={`form-flebox ${props.completed ? 'task-completed' : '' }`}>
             { /* Checkbox */ }
@@ -18,7 +20,7 @@ export default function ListItem(props){
             <Form.Group className="input-text-form">    
                 <Form.Control type="text" onChange={(e) => props.editTextFn(props.id, e)} value={props.content} disabled={props.disable} />
                 <Form.Text className="text-muted">
-                    {props.date}
+                    {dateString}
                 </Form.Text>
             </Form.Group>
             <Form.Group className="input-datepicker-form">
